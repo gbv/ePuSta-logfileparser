@@ -59,7 +59,7 @@ class MIRToolbox
             //fwrite(STDERR, "Match - receive:".$path."\n");
             $object = $this->mycoreObjectFactory->create($match[1]);
 
-            if ($object) {
+	    if ($object) {
                 $convertedLogline->identifier = $object->getAllIdentifier();
                 $convertedLogline->subjects[] = "oas:content:counter_abstract";
                 $convertedLogline->subjects = array_merge($object->getSubjects(), $convertedLogline->subjects);

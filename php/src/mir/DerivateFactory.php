@@ -28,7 +28,13 @@ class DerivateFactory extends AbstractFactory
                 fwrite(STDERR, "MyCoReObjectFactory - Configured directory don't exists. ".$this->config['datadir']."\n");
             }
             $path = $this->config['datadir'] . '/' . $this->getFilePathById($derivateid) . '/' . $derivateid . '.xml';
-        } else {
+	} else if ($this->config['getmethod'] == 'file-ocfl') {
+	    if (! is_dir($this->config['datadir'])) {
+                // Temp - print a notice for user. Replace after intruducing a correct error handling.
+                fwrite(STDERR, "MyCoReObjectFactory - Configured directory don't exists. ".$this->config['datadir']."\n");
+            }
+            $path = $this->config['datadir'] . '/' . $this->getOcflFilePathById('mcrderivate:'.$derivateid) . '/' . $derivateid . '.xml';
+	} else {
             $path = $this->config['url_prefix'] . "/receive/" . $derivateid . "?XSL.Style=xml";
         }
 
