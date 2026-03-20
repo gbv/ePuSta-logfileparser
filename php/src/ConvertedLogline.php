@@ -4,10 +4,13 @@ namespace epusta;
 
 class ConvertedLogline extends ApacheLogline
 {
-    public $identifier;
     public $uuid;
     public $sessionId;
-    public $subjects;
+    public $documentIdentifier;
+    public $associatedIdentifier;
+    public $tags;
+    public $errors;
+    public $rawLogline;
 
     public function __construct()
     {
@@ -17,11 +20,12 @@ class ConvertedLogline extends ApacheLogline
     public function __toString()
     {
         $str = $this->uuid . " ";
-        $str .= parent::__toString();
-        $str .= " ";
         $str .= $this->sessionId . " ";
-        $str .= json_encode($this->identifier) . " ";
-        $str .= json_encode($this->subjects) . "";
+        $str .= json_encode($this->documentIdentifier) . " ";
+        $str .= json_encode($this->associatedIdentifier) . " ";
+        $str .= json_encode($this->tags) . " ";
+        $str .= json_encode($this->errors) . " ";
+        $str .= $this->rawLogline;
 
         return $str;
     }
@@ -29,10 +33,12 @@ class ConvertedLogline extends ApacheLogline
     public function convertLogline($line)
     {
         $out = $this->uuid . " ";
-        $out .= $line . " "; // Copy of the Original line
         $out .= "- ";       // SessionID
-        $out .= "[] ";      // Identifier
-        $out .= "[] ";
+        $out .= "[] ";      // DocumentIdentifier
+        $out .= "[] ";      // AssociatedIdentifier
+        $out .= "[] ";      // Tags
+        $out .= "[] ";      // Errors
+        $out .= $line;      // Copy of the Original line
 
         return $out;
     }
