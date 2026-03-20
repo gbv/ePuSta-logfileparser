@@ -11,9 +11,9 @@ class ePuStaLoglineParserTest extends \PHPUnit\Framework\TestCase
     {
         $testFile = fopen(__DIR__."/ressources/epustaLoglineWithoutIdentifiersAndSubjects.log", "r");
         $testline = trim(fgets($testFile));
-        $epuStaLoglineParser = new ePuStaLoglineParser();
+        $ePuStaLoglineParser = new ePuStaLoglineParser();
         $logline = new ePuStaLogline();
-        $epuStaLoglineParser->parse($testline, $logline);
+        $ePuStaLoglineParser->parse($testline, $logline);
         $this->assertEquals($testline, $logline->__toString());
     }
 }
