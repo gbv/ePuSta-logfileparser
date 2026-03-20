@@ -15,7 +15,7 @@ use epusta\Opus4\OpusToolbox;
 class OpusToolboxTest extends \PHPUnit\Framework\TestCase
 {
     private $opusToolbox;
-    private $convertedLoglineParser;
+    private $epuStaLoglineParser;
     private $testFile;
 
     public function setUp() : void
@@ -23,7 +23,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         $this->opusToolbox = new OpusToolbox();
-        $this->convertedLoglineParser = new ePuStaLoglineParser();
+        $this->epuStaLoglineParser = new ePuStaLoglineParser();
 
         $this->testFile = fopen(__DIR__."/../ressources/epustaLoglineWithoutIdentifiersAndSubjects.log", "r");
     }
@@ -37,7 +37,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
 
         $testline = trim(fgets($this->testFile));
 
-        $this->convertedLoglineParser->parse($testline, $logline);
+        $this->epuStaLoglineParser->parse($testline, $logline);
         $this->opusToolbox->addIdentifier($logline);
 
         $expectedIdentifier = ["opus4-foo1-1618"];
@@ -57,7 +57,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
             $lines[] = fgets($this->testFile);
         }
         $testline = $lines[4];
-        $this->convertedLoglineParser->parse($testline, $logline);
+        $this->epuStaLoglineParser->parse($testline, $logline);
         $this->opusToolbox->addIdentifier($logline);
 
         $expectedIdentifier = ["opus4-foo3-2008"];

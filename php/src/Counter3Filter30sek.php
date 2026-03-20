@@ -12,13 +12,13 @@ class Counter3Filter30sek
     {
     }
 
-    public function edit(& $convertedLogline)
+    public function edit(& $epuStaLogline)
     {
-        $uuid = $convertedLogline->uuid;
-        $ip = $convertedLogline->urlLogline->ip;
-        $path = $convertedLogline->urlLogline->url;
-        $time = $convertedLogline->urlLogline->time;
-        $identifier = $convertedLogline->documentIdentifier;
+        $uuid = $epuStaLogline->uuid;
+        $ip = $epuStaLogline->urlLogline->ip;
+        $path = $epuStaLogline->urlLogline->url;
+        $time = $epuStaLogline->urlLogline->time;
+        $identifier = $epuStaLogline->documentIdentifier;
         $unixtime = strtotime($time);
 
         // delete old entrys
@@ -34,8 +34,8 @@ class Counter3Filter30sek
                         (count($identifier) > 0 && count(array_diff($identifier, $lastHit['identifier'])) == 0)
                     )
                 ) {
-                    if (! in_array("filter:30sek:counter3",$convertedLogline->tags)) {
-                        $convertedLogline->tags[] = "filter:30sek:counter3";
+                    if (! in_array("filter:30sek:counter3",$epuStaLogline->tags)) {
+                        $epuStaLogline->tags[] = "filter:30sek:counter3";
                     }
                 }
             }
