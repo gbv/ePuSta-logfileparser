@@ -31,39 +31,45 @@ Example source line (Apache Combined Log Format):
 - - - [14/Sep/2025:00:18:47 +0200] "GET /rsc/stat/dfi_mods_00104509.css HTTP/1.1" 200 50 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)"
 ```
 
-### Target Format (epustalog)
+### Target Format (epustalogfile)
 
-Each parsed and enriched line has the following structure:
+Each enriched line has the following structure:
 
 ```
-<uuid> <original log line> <sessionId> <identifierArray> <subjectsArray>
+<uuid> <sessionId> <documentIdentifier> <associatedIdentifier> <tags> <errors> <original log line>
 ```
 
-The fields appended after the original log line are separated by spaces:
+All fields are separated by spaces. The structured fields come first, the unmodified copy of the original log line is appended at the end. This ensures reliable parsing even if the original log line contains special characters.
 
 | Field | Description |
 |-------|-------------|
-| `uuid` | A UUID (v4) prepended to the line, uniquely identifying this log entry |
-| `original log line` | An unmodified copy of the original source log line |
+| `uuid` | A UUID (v4) uniquely identifying this log entry |
 | `sessionId` | A session identifier for the requesting client (or `-` if unknown) |
-| `identifierArray` | A JSON array of identifiers associated with the accessed document |
-| `subjectsArray` | A JSON array of tags/keywords describing the type of access or document properties |
+| `documentIdentifier` | A JSON array of identifiers of the accessed document itself (e.g. MyCoRe ID, DOI, GND) |
+| `associatedIdentifier` | A JSON array of identifiers of associated/parent units (e.g. the journal or series the document belongs to) |
+| `tags` | A JSON array of tags describing the type of access or properties of the document |
+| `errors` | A JSON array of error codes that occurred during enrichment |
+| `original log line` | An unmodified copy of the original source log line |
 
-#### Identifier Array
+#### Document Identifier
 
-The identifier array contains identifiers associated with the accessed document. These include:
+Contains identifiers of the accessed document itself, e.g.:
 
-- Identifiers of the document itself (e.g. MyCoRe ID, DOI, GND)
-- Identifiers of parent/containing units (e.g. the journal or series a document belongs to)
+- MyCoRe ID
+- DOI
+- GND
 
-Example: `["dfi_mods_00104509","dfi_mods_00000038"]`
+Example: `["dfi_mods_00104509"]`
 
-#### Subjects Array
+#### Associated Identifier
 
-The subjects array contains tags that describe:
+Contains identifiers of parent or associated units, e.g. the journal, series, or collection the document belongs to.
 
-- The type of access (e.g. whether the request was made by a bot)
-- Properties of the document (e.g. genre, content type, OA status)
+Example: `["dfi_mods_00000038"]`
+
+#### Tags
+
+Tags describe the type of access or properties of the document.
 
 Common tag prefixes:
 
@@ -75,6 +81,12 @@ Common tag prefixes:
 
 Example: `["mir_genre:article","filter:robot","oas:content:robots_abstract"]`
 
+#### Errors
+
+JSON array of error codes that occurred when enriching this line. Empty if no errors occurred.
+
+Example: `[]`
+
 ### Complete Example
 
 Source line (Apache Combined Log Format):
@@ -83,10 +95,10 @@ Source line (Apache Combined Log Format):
 - - - [14/Sep/2025:00:18:47 +0200] "GET /rsc/stat/dfi_mods_00104509.css HTTP/1.1" 200 50 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)"
 ```
 
-Resulting epustalog line:
+Resulting epustalogfile line:
 
 ```
-11b42b8c-fa92-49ec-9856-d398a731aecf - - - [14/Sep/2025:00:18:47 +0200] "GET /rsc/stat/dfi_mods_00104509.css HTTP/1.1" 200 50 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)" - ["dfi_mods_00104509","dfi_mods_00000038"] ["mir_genre:article","filter:robot","oas:content:robots_abstract"]
+11b42b8c-fa92-49ec-9856-d398a731aecf - ["dfi_mods_00104509"] ["dfi_mods_00000038"] ["mir_genre:article","filter:robot","oas:content:robots_abstract"] [] - - - [14/Sep/2025:00:18:47 +0200] "GET /rsc/stat/dfi_mods_00104509.css HTTP/1.1" 200 50 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)"
 ```
 
 The access log is thus enriched with document metadata and access classification, enabling detailed usage statistics per document, session, and access type.
