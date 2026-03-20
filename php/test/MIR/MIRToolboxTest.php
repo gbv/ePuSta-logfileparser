@@ -2,8 +2,8 @@
 
 namespace epustaTest;
 
-use epusta\ConvertedLogline;
-use epusta\ConvertedLoglineParser;
+use epusta\ePuStaLogline;
+use epusta\ePuStaLoglineParser;
 use epusta\mir\MIRToolbox;
 use epusta\Configuration;
 
@@ -19,7 +19,7 @@ class MIRToolboxTest extends \PHPUnit\Framework\TestCase
         $configuration = new Configuration();
         $config = $configuration->getPhpUnitConfig();
         $this->mirToolbox = new MIRToolbox($config);
-        $this->convertedLoglineParser = new ConvertedLoglineParser();
+        $this->convertedLoglineParser = new ePuStaLoglineParser();
         
         $logfile=__DIR__."/../ressources/mir-identifier-css.log";
         $this->assertTrue(is_readable($logfile),"Fail to read file mir-identifier-css.log");
@@ -34,13 +34,13 @@ class MIRToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetIdentifierFromCSSHack()
     {
-        $logline = new ConvertedLogline();
+        $logline = new ePuStaLogline();
         
         $testline = trim(fgets($this->testFile));
         
         $this->convertedLoglineParser->parse($testline, $logline);
         $this->mirToolbox->addIdentifier($logline);
-        $this->assertContains("test_mods_00000001", $logline->identifier, "MyCoReID not parsed from css call - test_mods_00000001 is missed in array of identifier: \n".print_r($logline->identifier,true));
+        $this->assertContains("test_mods_00000001", $logline->documentIdentifier, "MyCoReID not parsed from css call - test_mods_00000001 is missed in array of identifier: \n".print_r($logline->identifier,true));
             
     }
 }

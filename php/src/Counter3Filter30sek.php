@@ -15,10 +15,10 @@ class Counter3Filter30sek
     public function edit(& $convertedLogline)
     {
         $uuid = $convertedLogline->uuid;
-        $ip = $convertedLogline->ip;
-        $path = $convertedLogline->url;
-        $time = $convertedLogline->time;
-        $identifier = $convertedLogline->identifier;
+        $ip = $convertedLogline->urlLogline->ip;
+        $path = $convertedLogline->urlLogline->url;
+        $time = $convertedLogline->urlLogline->time;
+        $identifier = $convertedLogline->documentIdentifier;
         $unixtime = strtotime($time);
 
         // delete old entrys
@@ -34,8 +34,8 @@ class Counter3Filter30sek
                         (count($identifier) > 0 && count(array_diff($identifier, $lastHit['identifier'])) == 0)
                     )
                 ) {
-                    if (! in_array("filter:30sek:counter3",$convertedLogline->subjects)) {
-                        $convertedLogline->subjects[] = "filter:30sek:counter3";
+                    if (! in_array("filter:30sek:counter3",$convertedLogline->tags)) {
+                        $convertedLogline->tags[] = "filter:30sek:counter3";
                     }
                 }
             }

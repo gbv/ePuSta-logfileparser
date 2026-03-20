@@ -10,7 +10,8 @@ $config = $configuration->getConfig();
 //use Monolog\Logger;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
-use epusta\ConvertedLogline;
+use epusta\ePuStaLogline;
+use epusta\ApacheLogline;
 
 //$logger = new Logger('log2epusta');
 //$logger->pushHandler(new StreamHandler($config['logdir'] . '/log2epusta.log', Logger::DEBUG));
@@ -18,19 +19,21 @@ use epusta\ConvertedLogline;
 
 while (!feof(STDIN)) {
     if ($line = trim(fgets(STDIN))) {
-        $logline = new ConvertedLogline();
+        $apacheLogline = new ApacheLogline();
+        $message = $apacheLogline->checkFormat($line);
+        if ($message != True) {
+            //$logger->error($message);
+            die ("Error: " . $message . "\n");
+        }
+
+        $logline = new ePuStaLogline();
+        $logline->urlLogline = $apacheLogline;
         try {
             $logline->uuid = Uuid::uuid4();
         } catch (UnsatisfiedDependencyException $e) {
             // Some dependency was not met. Either the method cannot be called on a
             // 32-bit system, or it can, but it relies on Moontoast\Math to be present.
             echo 'Caught exception: ' . $e->getMessage() . "\n";
-        }
-
-        $message = $logline->checkFormat($line);
-        if ($message != True) {
-            //$logger->error($message);
-            die ("Error: " . $message . "\n");
         }
 
         echo($logline->convertLogline($line) . "\n");

@@ -2,19 +2,12 @@
 
 namespace epusta;
 
-class ApacheLogline
+class ApacheLogline extends URLLogline
 {
     public $ip;
     public $remoteLogname;
     public $remoteUser;
-    public $time;
-    public $httpMethod;
-    public $url;
-    public $httpProtokol;
-    public $httpStatusCode;
     public $sizeOfResponse;
-    public $referer;
-    public $userAgent;
     private $format;
 
     // TODO Why is this empty?
@@ -31,7 +24,7 @@ class ApacheLogline
         $str .= '[' . $this->time . "] ";
         $str .= '"' . $this->httpMethod . " ";
         $str .= $this->url . " ";
-        $str .= $this->httpProtokol . '" ';
+        $str .= $this->httpProtokoll . '" ';
         $str .= $this->httpStatusCode . ' ';
         $str .= $this->sizeOfResponse . " ";
         $str .= '"' . $this->referer . '" ';

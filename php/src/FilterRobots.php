@@ -16,31 +16,31 @@ class FilterRobots
 
     public function edit(& $convertedLogline)
     {
-        $agent = $convertedLogline->userAgent;
+        $agent = $convertedLogline->urlLogline->userAgent;
         foreach ($this->robots as $robot) {
             $regex = '/' . $robot["pattern"] . '/';
             if (preg_match($regex, $agent, $treffer)) {
-                $convertedLogline->subjects[] = "filter:robot";
+                $convertedLogline->tags[] = "filter:robot";
 
-                if (in_array("oas:content:counter", $convertedLogline->subjects)) {
-                    if (($key = array_search("oas:content:counter", $convertedLogline->subjects)) !== false) {
-                        unset($convertedLogline->subjects[$key]);
+                if (in_array("oas:content:counter", $convertedLogline->tags)) {
+                    if (($key = array_search("oas:content:counter", $convertedLogline->tags)) !== false) {
+                        unset($convertedLogline->tags[$key]);
                     }
 
-                    $convertedLogline->subjects = array_values($convertedLogline->subjects);
-                    $convertedLogline->subjects[] = "oas:content:robots";
+                    $convertedLogline->tags = array_values($convertedLogline->tags);
+                    $convertedLogline->tags[] = "oas:content:robots";
                 }
 
-                if (in_array("oas:content:counter_abstract", $convertedLogline->subjects)) {
+                if (in_array("oas:content:counter_abstract", $convertedLogline->tags)) {
                     if (($key = array_search(
                         "oas:content:counter_abstract",
-                        $convertedLogline->subjects
+                        $convertedLogline->tags
                     )) !== false) {
-                        unset($convertedLogline->subjects[$key]);
+                        unset($convertedLogline->tags[$key]);
                     }
 
-                    $convertedLogline->subjects = array_values($convertedLogline->subjects);
-                    $convertedLogline->subjects[] = "oas:content:robots_abstract";
+                    $convertedLogline->tags = array_values($convertedLogline->tags);
+                    $convertedLogline->tags[] = "oas:content:robots_abstract";
                 }
             }
         }
