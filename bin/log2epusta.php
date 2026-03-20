@@ -11,7 +11,6 @@ $config = $configuration->getConfig();
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
 use epusta\ePuStaLogline;
-use epusta\ApacheLogline;
 
 //$logger = new Logger('log2epusta');
 //$logger->pushHandler(new StreamHandler($config['logdir'] . '/log2epusta.log', Logger::DEBUG));
