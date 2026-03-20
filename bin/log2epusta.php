@@ -19,15 +19,7 @@ use epusta\ApacheLogline;
 
 while (!feof(STDIN)) {
     if ($line = trim(fgets(STDIN))) {
-        $apacheLogline = new ApacheLogline();
-        $message = $apacheLogline->checkFormat($line);
-        if ($message != True) {
-            //$logger->error($message);
-            die ("Error: " . $message . "\n");
-        }
-
         $logline = new ePuStaLogline();
-        $logline->urlLogline = $apacheLogline;
         try {
             $logline->uuid = Uuid::uuid4();
         } catch (UnsatisfiedDependencyException $e) {
