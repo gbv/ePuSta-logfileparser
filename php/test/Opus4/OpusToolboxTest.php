@@ -8,8 +8,8 @@
 
 namespace epustaTest\Opus4;
 
-use epusta\ConvertedLogline;
-use epusta\ConvertedLoglineParser;
+use epusta\ePuStaLogline;
+use epusta\ePuStaLoglineParser;
 use epusta\Opus4\OpusToolbox;
 
 class OpusToolboxTest extends \PHPUnit\Framework\TestCase
@@ -23,7 +23,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         $this->opusToolbox = new OpusToolbox();
-        $this->convertedLoglineParser = new ConvertedLoglineParser();
+        $this->convertedLoglineParser = new ePuStaLoglineParser();
 
         $this->testFile = fopen(__DIR__."/../ressources/epustaLoglineWithoutIdentifiersAndSubjects.log", "r");
     }
@@ -33,7 +33,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddIdentifierOpusFulltext()
     {
-        $logline = new ConvertedLogline();
+        $logline = new ePuStaLogline();
 
         $testline = trim(fgets($this->testFile));
 
@@ -42,8 +42,8 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
 
         $expectedIdentifier = ["opus4-foo1-1618"];
         $expectedSubjects = ["oas:content:counter"];
-        $this->assertEquals($logline->identifier, $expectedIdentifier);
-        $this->assertEquals($logline->subjects, $expectedSubjects);
+        $this->assertEquals($logline->documentIdentifier, $expectedIdentifier);
+        $this->assertEquals($logline->tags, $expectedSubjects);
     }
 
     /**
@@ -51,7 +51,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddIdentifierOpusFrontdoor()
     {
-        $logline = new ConvertedLogline();
+        $logline = new ePuStaLogline();
 
         while (! feof($this->testFile)) {
             $lines[] = fgets($this->testFile);
@@ -62,7 +62,7 @@ class OpusToolboxTest extends \PHPUnit\Framework\TestCase
 
         $expectedIdentifier = ["opus4-foo3-2008"];
         $expectedSubjects = ["oas:content:counter_abstract"];
-        $this->assertEquals($logline->identifier, $expectedIdentifier);
-        $this->assertEquals($logline->subjects, $expectedSubjects);
+        $this->assertEquals($logline->documentIdentifier, $expectedIdentifier);
+        $this->assertEquals($logline->tags, $expectedSubjects);
     }
 }

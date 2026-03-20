@@ -10,9 +10,9 @@ class FilterHttpMethod
 
     public function edit(& $convertedLogline)
     {
-        $httpMethod = $convertedLogline->httpMethod;
+        $httpMethod = $convertedLogline->urlLogline->httpMethod;
         if ($httpMethod != 'GET') {
-            $convertedLogline->subjects[] = "epusta:filter:httpMethod";
+            $convertedLogline->tags[] = "epusta:filter:httpMethod";
         }
     }
 }

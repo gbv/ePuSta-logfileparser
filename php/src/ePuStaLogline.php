@@ -2,7 +2,7 @@
 
 namespace epusta;
 
-class ConvertedLogline extends ApacheLogline
+class ePuStaLogline
 {
     public $uuid;
     public $sessionId;
@@ -11,11 +11,7 @@ class ConvertedLogline extends ApacheLogline
     public $tags;
     public $errors;
     public $rawLogline;
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    public $urlLogline;
 
     public function __toString()
     {

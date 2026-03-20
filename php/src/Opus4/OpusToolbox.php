@@ -9,7 +9,7 @@ class OpusToolbox
 {
     public function addIdentifier(& $convertedLogline, $praefix = null)
     {
-        $path = $convertedLogline->url;
+        $path = $convertedLogline->urlLogline->url;
 
         /**
          * Add functionality for OPUS4.
@@ -24,11 +24,11 @@ class OpusToolbox
             $method_names = preg_grep('/^rule/', get_class_methods($this));
         foreach ($method_names as $value) {
             $this->$value($path, $convertedLogline, $praefix);
-            $convertedLogline->identifier = array_unique($convertedLogline->identifier);
-            if ($convertedLogline->httpMethod == 'GET') {
-                $convertedLogline->subjects = array_unique($convertedLogline->subjects);
-            } elseif ($convertedLogline->httpMethod == 'HEAD') {
-                $convertedLogline->subjects = ["oas:content:counter_head"];
+            $convertedLogline->documentIdentifier = array_unique($convertedLogline->documentIdentifier);
+            if ($convertedLogline->urlLogline->httpMethod == 'GET') {
+                $convertedLogline->tags = array_unique($convertedLogline->tags);
+            } elseif ($convertedLogline->urlLogline->httpMethod == 'HEAD') {
+                $convertedLogline->tags = ["oas:content:counter_head"];
             }
         }
     }
@@ -40,13 +40,13 @@ class OpusToolbox
     {
         if ($praefix == null) {
             if (preg_match("|/([^/]+)/frontdoor/deliver/index/docId/([0-9]+)/file/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter";
-                $convertedLogline->identifier[] = $match[1] . "-" . $match[2];
+                $convertedLogline->tags[] = "oas:content:counter";
+                $convertedLogline->documentIdentifier[] = $match[1] . "-" . $match[2];
             }
         } else {
             if (preg_match("|/frontdoor/deliver/index/docId/([0-9]+)/file/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter";
-                $convertedLogline->identifier[] = $praefix . "-" . $match[1];
+                $convertedLogline->tags[] = "oas:content:counter";
+                $convertedLogline->documentIdentifier[] = $praefix . "-" . $match[1];
             }
         }
     }
@@ -58,13 +58,13 @@ class OpusToolbox
     {
         if ($praefix == null) {
             if (preg_match("|/([^/]+)/frontdoor/index/.*/docId/([0-9]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_abstract";
-                $convertedLogline->identifier[] = $match[1] . "-" . $match[2];
+                $convertedLogline->tags[] = "oas:content:counter_abstract";
+                $convertedLogline->documentIdentifier[] = $match[1] . "-" . $match[2];
             }
         } else {
             if (preg_match("|/frontdoor/index/.*/docId/([0-9]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_abstract";
-                $convertedLogline->identifier[] = $praefix . "-" . $match[1];
+                $convertedLogline->tags[] = "oas:content:counter_abstract";
+                $convertedLogline->documentIdentifier[] = $praefix . "-" . $match[1];
             }
         }
     }
@@ -76,13 +76,13 @@ class OpusToolbox
     {
         if ($praefix == null) {
             if (preg_match("|/([^/]+)/assets/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_layout";
-                $convertedLogline->identifier[] = $match[1];
+                $convertedLogline->tags[] = "oas:content:counter_layout";
+                $convertedLogline->documentIdentifier[] = $match[1];
             }
         } else {
             if (preg_match("|/assets/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_layout";
-                $convertedLogline->identifier[] = $praefix;
+                $convertedLogline->tags[] = "oas:content:counter_layout";
+                $convertedLogline->documentIdentifier[] = $praefix;
             }
         }
     }
@@ -94,13 +94,13 @@ class OpusToolbox
     {
         if ($praefix == null) {
             if (preg_match("|/([^/]+)/img/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_layout";
-                $convertedLogline->identifier[] = $match[1];
+                $convertedLogline->tags[] = "oas:content:counter_layout";
+                $convertedLogline->documentIdentifier[] = $match[1];
             }
         } else {
             if (preg_match("|/img/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_layout";
-                $convertedLogline->identifier[] = $praefix;
+                $convertedLogline->tags[] = "oas:content:counter_layout";
+                $convertedLogline->documentIdentifier[] = $praefix;
             }
         }
     }
@@ -112,13 +112,13 @@ class OpusToolbox
     {
         if ($praefix == null) {
             if (preg_match("|/([^/]+)/layouts/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_layout";
-                $convertedLogline->identifier[] = $match[1];
+                $convertedLogline->tags[] = "oas:content:counter_layout";
+                $convertedLogline->documentIdentifier[] = $match[1];
             }
         } else {
             if (preg_match("|/layouts/([A-Za-z0-9.]+)|", $path, $match)) {
-                $convertedLogline->subjects[] = "oas:content:counter_layout";
-                $convertedLogline->identifier[] = $praefix;
+                $convertedLogline->tags[] = "oas:content:counter_layout";
+                $convertedLogline->documentIdentifier[] = $praefix;
             }
         }
     }
