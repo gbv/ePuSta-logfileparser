@@ -9,11 +9,11 @@ class FilterHttpStatus
     {
     }
 
-    public function edit(& $convertedLogline)
+    public function edit(& $epuStaLogline)
     {
-        $httpStatus = $convertedLogline->urlLogline->httpStatusCode;
+        $httpStatus = $epuStaLogline->urlLogline->httpStatusCode;
         if (! ($httpStatus == 200 || $httpStatus == 202 || $httpStatus == 206)) {
-            $convertedLogline->tags[] = "epusta:filter:httpStatus";
+            $epuStaLogline->tags[] = "epusta:filter:httpStatus";
         }
     }
 }

@@ -14,33 +14,33 @@ class FilterRobots
         $this->robots = json_decode($robotsFile, true);
     }
 
-    public function edit(& $convertedLogline)
+    public function edit(& $epuStaLogline)
     {
-        $agent = $convertedLogline->urlLogline->userAgent;
+        $agent = $epuStaLogline->urlLogline->userAgent;
         foreach ($this->robots as $robot) {
             $regex = '/' . $robot["pattern"] . '/';
             if (preg_match($regex, $agent, $treffer)) {
-                $convertedLogline->tags[] = "filter:robot";
+                $epuStaLogline->tags[] = "filter:robot";
 
-                if (in_array("oas:content:counter", $convertedLogline->tags)) {
-                    if (($key = array_search("oas:content:counter", $convertedLogline->tags)) !== false) {
-                        unset($convertedLogline->tags[$key]);
+                if (in_array("oas:content:counter", $epuStaLogline->tags)) {
+                    if (($key = array_search("oas:content:counter", $epuStaLogline->tags)) !== false) {
+                        unset($epuStaLogline->tags[$key]);
                     }
 
-                    $convertedLogline->tags = array_values($convertedLogline->tags);
-                    $convertedLogline->tags[] = "oas:content:robots";
+                    $epuStaLogline->tags = array_values($epuStaLogline->tags);
+                    $epuStaLogline->tags[] = "oas:content:robots";
                 }
 
-                if (in_array("oas:content:counter_abstract", $convertedLogline->tags)) {
+                if (in_array("oas:content:counter_abstract", $epuStaLogline->tags)) {
                     if (($key = array_search(
                         "oas:content:counter_abstract",
-                        $convertedLogline->tags
+                        $epuStaLogline->tags
                     )) !== false) {
-                        unset($convertedLogline->tags[$key]);
+                        unset($epuStaLogline->tags[$key]);
                     }
 
-                    $convertedLogline->tags = array_values($convertedLogline->tags);
-                    $convertedLogline->tags[] = "oas:content:robots_abstract";
+                    $epuStaLogline->tags = array_values($epuStaLogline->tags);
+                    $epuStaLogline->tags[] = "oas:content:robots_abstract";
                 }
             }
         }

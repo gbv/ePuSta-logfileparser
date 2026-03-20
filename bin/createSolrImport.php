@@ -3,12 +3,12 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$convertedLoglineParser = new epusta\ePuStaLoglineParser();
+$epuStaLoglineParser = new epusta\ePuStaLoglineParser();
 
 while (!feof(STDIN)) {
     if ($line = trim(fgets(STDIN))) {
         $logline = new epusta\ePuStaLogline();
-        if ($convertedLoglineParser->parse($line, $logline)) {
+        if ($epuStaLoglineParser->parse($line, $logline)) {
             $str = '{ "uuid": "' . $logline->uuid . '"';
             $str .= ', "identifier":' . json_encode($logline->documentIdentifier);
             $time = new DateTime($logline->urlLogline->time);
