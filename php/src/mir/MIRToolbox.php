@@ -8,6 +8,9 @@ class MIRToolbox
 {
     public $dbh = false;
     public $config = false;
+    public $logger = false;
+    public $cache = [];
+    public $lastDerivate = "";
 
     public $mycoreObjectFactory = null;
     public $mycoreDerivateFactory = null;
