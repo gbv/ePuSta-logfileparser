@@ -28,6 +28,15 @@ See `README.md` for the full epustalogfile format specification.
 - `php/src/mir/` — MIR (MyCoRe) repository-specific enrichment
 - `php/src/Opus4/` — OPUS 4 repository-specific enrichment
 
+## Git Workflow
+
+Commits, pull requests, and branches are linked to Jira tickets. The Jira ticket ID is placed at the beginning of the commit message, PR title, and branch name.
+
+Examples:
+- Branch: `EPUSTA-42-new-logline-format`
+- Commit: `EPUSTA-42 add new logline format parser`
+- PR title: `EPUSTA-42 add new logline format parser`
+
 ## Coding Notes
 
 - Namespace: `epusta`
