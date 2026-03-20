@@ -40,7 +40,7 @@ class MIRToolboxTest extends \PHPUnit\Framework\TestCase
         
         $this->epuStaLoglineParser->parse($testline, $logline);
         $this->mirToolbox->addIdentifier($logline);
-        $this->assertContains("test_mods_00000001", $logline->documentIdentifier, "MyCoReID not parsed from css call - test_mods_00000001 is missed in array of identifier: \n".print_r($logline->identifier,true));
+        $this->assertContains("test_mods_00000001", $logline->documentIdentifier, "MyCoReID not parsed from css call - test_mods_00000001 is missed in array of identifier: \n".print_r($logline->documentIdentifier,true));
             
     }
 }
