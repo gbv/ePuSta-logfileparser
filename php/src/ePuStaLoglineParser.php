@@ -68,8 +68,10 @@ class ePuStaLoglineParser
 
         $logline->errors = $errorsDecoded;
 
-        // Skip step 3 if errors are already present in the error array
-        if (!empty($logline->errors)) {
+        // Structural errors (E02/E03/E04) mean the ePuSta line format is broken — skip step 3.
+        // Non-structural errors (e.g. E01, E05) mean enrichment failed but the format is intact — proceed.
+        $structuralErrors = ['E02', 'E03', 'E04'];
+        if (!empty(array_intersect($logline->errors, $structuralErrors))) {
             $logline->rawLogline = $line;
             return true;
         }
@@ -91,6 +93,11 @@ class ePuStaLoglineParser
         $logline->associatedIdentifier = json_decode(trim($restMatch[3]), true);
         $logline->tags = json_decode(trim($restMatch[4]), true);
         $logline->rawLogline = trim($restMatch[5]);
+
+        // Skip URL parser if E01 is already present to avoid adding it twice
+        if (in_array('E01', $logline->errors)) {
+            return true;
+        }
 
         $urlLogline = new URLLogline();
         $urlErrors = [];
