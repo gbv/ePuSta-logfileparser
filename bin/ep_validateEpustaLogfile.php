@@ -4,6 +4,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $onlyFirstLine = false;
+$debug = false;
 $file = null;
 
 $args = array_slice($argv, 1);
@@ -18,12 +19,15 @@ while ($i < count($args)) {
         echo "\n";
         echo "Options:\n";
         echo "  -h, --help            Show this help message and exit\n";
+        echo "  --debug               Show debug output on STDERR\n";
         echo "  --only-first-line     Only validate the first line of the file\n";
         echo "\n";
         echo "Exit codes:\n";
         echo "  0  All checked lines are valid\n";
         echo "  1  One or more lines are invalid\n";
         exit(0);
+    } elseif ($arg === '--debug') {
+        $debug = true;
     } elseif ($arg === '--only-first-line') {
         $onlyFirstLine = true;
     } else {
@@ -47,7 +51,7 @@ if (!is_readable($file)) {
 $configuration = new \epusta\Configuration();
 $config = $configuration->getConfig();
 $urlLoglineParserClass = $config['URLLoglineParserClass'] ?? \epusta\ApacheLoglineParser::class;
-$epuStaLoglineParser = new epusta\ePuStaLoglineParser($urlLoglineParserClass);
+$epuStaLoglineParser = new epusta\ePuStaLoglineParser($urlLoglineParserClass, $debug);
 $handle = fopen($file, 'r');
 $valid = true;
 $lineNumber = 0;

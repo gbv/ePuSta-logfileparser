@@ -3,6 +3,19 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$opts = getopt('h', ['help', 'debug']);
+if (isset($opts['h']) || isset($opts['help'])) {
+    echo "Usage: log2epusta.php [OPTIONS]\n";
+    echo "\n";
+    echo "Reads raw web server log lines from STDIN and converts them to ePuSta log\n";
+    echo "format, writing results to STDOUT.\n";
+    echo "\n";
+    echo "Options:\n";
+    echo "  -h, --help   Show this help message and exit\n";
+    echo "  --debug      Show debug output on STDERR\n";
+    exit(0);
+}
+
 $configuration = new \epusta\Configuration();
 $config = $configuration->getConfig();
 
