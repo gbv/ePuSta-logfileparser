@@ -12,11 +12,11 @@ class ePuStaLoglineParser
     {
         $this->debug = $debug;
         $this->regExp = '([^ ]*) ';           // UUID
+        $this->regExp .= '(\[[^\]]*\]) ';     // Errors
         $this->regExp .= '([^ ]*) ';          // SessionID
         $this->regExp .= '(\[[^\]]*\]) ';     // DocumentIdentifier
         $this->regExp .= '(\[[^\]]*\]) ';     // AssociatedIdentifier
         $this->regExp .= '(\[[^\]]*\]) ';     // Tags
-        $this->regExp .= '(\[[^\]]*\]) ';     // Errors
         $this->regExp .= '(.*)';              // CopyOfLogline
 
         $this->urlLoglineParser = new $urlLoglineParserClass();
@@ -29,11 +29,11 @@ class ePuStaLoglineParser
 
         if (preg_match($regExp2, $line, $treffer)) {
             $logline->uuid = trim($treffer[1]);
-            $logline->sessionId = trim($treffer[2]);
-            $logline->documentIdentifier = json_decode(trim($treffer[3]), true);
-            $logline->associatedIdentifier = json_decode(trim($treffer[4]), true);
-            $logline->tags = json_decode(trim($treffer[5]), true);
-            $logline->errors = json_decode(trim($treffer[6]), true) ?? [];
+            $logline->errors = json_decode(trim($treffer[2]), true) ?? [];
+            $logline->sessionId = trim($treffer[3]);
+            $logline->documentIdentifier = json_decode(trim($treffer[4]), true);
+            $logline->associatedIdentifier = json_decode(trim($treffer[5]), true);
+            $logline->tags = json_decode(trim($treffer[6]), true);
             $logline->rawLogline = trim($treffer[7]);
 
             $urlLogline = new URLLogline();
@@ -47,6 +47,7 @@ class ePuStaLoglineParser
 
             return true;
         } else {
+            $logline->rawLogline = $line;
             $logline->errors = ['E02'];
             if ($this->debug) {
                 fwrite(STDERR, "Error: can't parse ePuStaLogline:\n");

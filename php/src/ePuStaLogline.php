@@ -16,11 +16,11 @@ class ePuStaLogline
     public function __toString()
     {
         $str = $this->uuid . " ";
+        $str .= json_encode($this->errors) . " ";
         $str .= $this->sessionId . " ";
         $str .= json_encode($this->documentIdentifier) . " ";
         $str .= json_encode($this->associatedIdentifier) . " ";
         $str .= json_encode($this->tags) . " ";
-        $str .= json_encode($this->errors) . " ";
         $str .= $this->rawLogline;
 
         return $str;
@@ -29,11 +29,11 @@ class ePuStaLogline
     public function convertLogline($line)
     {
         $out = $this->uuid . " ";
+        $out .= "[] ";      // Errors
         $out .= "- ";       // SessionID
         $out .= "[] ";      // DocumentIdentifier
         $out .= "[] ";      // AssociatedIdentifier
         $out .= "[] ";      // Tags
-        $out .= "[] ";      // Errors
         $out .= $line;      // Copy of the Original line
 
         return $out;
