@@ -88,7 +88,10 @@ abstract class AbstractFactory
         $count = 0;
 	// TODO Why is this developed in this way?
 	//libxml_set_external_entity_loader(LIBXML_NOENT);
-	$xml = file_get_contents($url);
+	$xml = @file_get_contents($url);
+        if ($xml === false) {
+            return null;
+        }
 	$load = $doc->loadXML($xml);
         //$load = $doc->load($url,LIBXML_NOWARNING );
         //while ($count < 10 && ! $load) {

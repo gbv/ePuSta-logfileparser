@@ -33,7 +33,9 @@ class MIRToolbox
 
     public function addIdentifier(& $epuStaLogline)
     {
-        $path = $epuStaLogline->urlLogline->url;
+        $fullUrl = $epuStaLogline->urlLogline->url;
+        $queryStart = strpos($fullUrl, '?');
+        $path = ($queryStart !== false) ? substr($fullUrl, 0, $queryStart) : $fullUrl;
         $referer = $epuStaLogline->urlLogline->referer;
         $mycoreIdPattern = (isset($this->config['mycoreIdPattern']) ? $this->config['mycoreIdPattern'] : '([^\/]+_[^\/]+_[0-9]{8})' );
         $derivateIdPattern = (isset($this->config['derivateIdPattern']) ? $this->config['derivateIdPattern'] : '([^\/]+_derivate_[0-9]{8})' );
@@ -52,7 +54,9 @@ class MIRToolbox
                 $epuStaLogline->tags[] = "oas:content:counter_abstract";
                 $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
                 return true;
-            } 
+            }
+            $epuStaLogline->errors[] = 'E05';
+            return false;
         } elseif (preg_match(
             '/\/receive\/'.$mycoreIdPattern.'(;jsessionid.+|$)/',
             $path,
@@ -67,7 +71,9 @@ class MIRToolbox
                 $epuStaLogline->tags[] = "oas:content:counter_abstract";
                 $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
                 return true;
-            } 
+            }
+            $epuStaLogline->errors[] = 'E05';
+            return false;
         } elseif (preg_match(
             '/\/MCRFileNodeServlet\/'.$derivateIdPattern.'\/([^;?]+)(;jsessionid)?([?]view)?.*/',
             $path,
@@ -97,6 +103,7 @@ class MIRToolbox
             $this->lastDerivate = $derivateid;
             $derivate = $this->mycoreDerivateFactory->create($derivateid);
             if ($derivate == null) {
+                $epuStaLogline->errors[] = 'E05';
                 return false;
             }
             $maindoc = $derivate->maindoc;
@@ -111,6 +118,10 @@ class MIRToolbox
                 $objectid = $derivate->objectid;
                 //fwrite(STDERR, " ObjectID: ".$objectid."\n");
                 $object = $this->mycoreObjectFactory->create($objectid);
+                if ($object == null) {
+                    $epuStaLogline->errors[] = 'E05';
+                    return false;
+                }
                 $epuStaLogline->documentIdentifier = array_merge($object->getAllIdentifier(), $epuStaLogline->documentIdentifier);
                 $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
                 //Add URN
@@ -135,12 +146,17 @@ class MIRToolbox
             $epuStaLogline->tags[] = "oas:content:counter";
             $derivate = $this->mycoreDerivateFactory->create($derivateid);
             if ($derivate == null) {
+                $epuStaLogline->errors[] = 'E05';
                 return false;
             }
             $epuStaLogline->documentIdentifier[] = $derivateid;
             $objectid = $derivate->objectid;
             //fwrite(STDERR, "Object:".$objectid."\n");
             $object = $this->mycoreObjectFactory->create($objectid);
+            if ($object == null) {
+                $epuStaLogline->errors[] = 'E05';
+                return false;
+            }
             $epuStaLogline->documentIdentifier = array_merge($object->getAllIdentifier(), $epuStaLogline->documentIdentifier);
             $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
             //Add URN
@@ -159,11 +175,16 @@ class MIRToolbox
             $epuStaLogline->tags[] = "oas:content:counter";
             $derivate = $this->mycoreDerivateFactory->create($derivateid);
             if ($derivate == null) {
+                $epuStaLogline->errors[] = 'E05';
                 return false;
             }
             $epuStaLogline->documentIdentifier[] = $derivateid;
             $objectid = $derivate->objectid;
             $object = $this->mycoreObjectFactory->create($objectid);
+            if ($object == null) {
+                $epuStaLogline->errors[] = 'E05';
+                return false;
+            }
             $epuStaLogline->documentIdentifier = array_merge($object->getAllIdentifier(), $epuStaLogline->documentIdentifier);
             $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
             //Add URN
