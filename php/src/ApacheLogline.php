@@ -4,7 +4,6 @@ namespace epusta;
 
 class ApacheLogline extends URLLogline
 {
-    public $ip;
     public $remoteLogname;
     public $remoteUser;
     public $sizeOfResponse;

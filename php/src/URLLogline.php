@@ -4,7 +4,7 @@ namespace epusta;
 
 class URLLogline
 {
-    public $id;
+    public $ip;
     public $time;
     public $httpMethod;
     public $url;
