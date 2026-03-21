@@ -44,7 +44,10 @@ if (!is_readable($file)) {
     exit(1);
 }
 
-$epuStaLoglineParser = new epusta\ePuStaLoglineParser();
+$configuration = new \epusta\Configuration();
+$config = $configuration->getConfig();
+$urlLoglineParserClass = $config['URLLoglineParserClass'] ?? \epusta\ApacheLoglineParser::class;
+$epuStaLoglineParser = new epusta\ePuStaLoglineParser($urlLoglineParserClass);
 $handle = fopen($file, 'r');
 $valid = true;
 $lineNumber = 0;

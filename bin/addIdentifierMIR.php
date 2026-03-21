@@ -5,7 +5,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $configuration = new \epusta\Configuration();
 $config = $configuration->getConfig();
-$epuStaLoglineParser = new epusta\ePuStaLoglineParser();
+$urlLoglineParserClass = $config['URLLoglineParserClass'] ?? \epusta\ApacheLoglineParser::class;
+$epuStaLoglineParser = new epusta\ePuStaLoglineParser($urlLoglineParserClass);
 $mirToolbox = new epusta\mir\MIRToolbox($config);
 
 while (!feof(STDIN)) {

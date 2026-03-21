@@ -7,5 +7,7 @@ getmethod = file
 datadir = ../data
 ; mycoreIdPattern - regular Expression to much the mycoreId (default: ([^\/]+_[^\/]+_[0-9]{8})) 
 mycoreIdPattern = "([^\/]+_[^\/]+_[0-9]{8})"
-; derivateIdPattern - regular Expression to much the derivateId (default: ([^\/]+_derivate_[0-9]{8})) 
+; derivateIdPattern - regular Expression to much the derivateId (default: ([^\/]+_derivate_[0-9]{8}))
 derivateIdPattern = "([^\/]+_derivate_[0-9]{8})"
+; URLLoglineParserClass - class used to parse the raw log line into a URLLogline object
+URLLoglineParserClass = epusta\ApacheLoglineParser
