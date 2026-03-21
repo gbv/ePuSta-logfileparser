@@ -14,8 +14,8 @@ class ePuStaLoglineParser
     {
         $this->debug = $debug;
 
-        // Step 1: UUID
-        $this->uuidRegExp = '/^([^ ]+)/';
+        // Step 1: UUID (must match standard UUID format xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+        $this->uuidRegExp = '/^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/';
 
         // Step 2: error array (after UUID and space)
         $this->errorsRegExp = '/^[^ ]+ (\[[^\]]*\])/';
