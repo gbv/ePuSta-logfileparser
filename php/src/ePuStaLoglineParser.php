@@ -4,20 +4,24 @@ namespace epusta;
 
 class ePuStaLoglineParser
 {
-    public $regExp;
+    private $uuidRegExp;
+    private $errorsRegExp;
+    private $restRegExp;
     private $urlLoglineParser;
     private $debug;
 
     public function __construct(string $urlLoglineParserClass = ApacheLoglineParser::class, bool $debug = false)
     {
         $this->debug = $debug;
-        $this->regExp = '([^ ]*) ';           // UUID
-        $this->regExp .= '(\[[^\]]*\]) ';     // Errors
-        $this->regExp .= '([^ ]*) ';          // SessionID
-        $this->regExp .= '(\[[^\]]*\]) ';     // DocumentIdentifier
-        $this->regExp .= '(\[[^\]]*\]) ';     // AssociatedIdentifier
-        $this->regExp .= '(\[[^\]]*\]) ';     // Tags
-        $this->regExp .= '(.*)';              // CopyOfLogline
+
+        // Step 1: UUID
+        $this->uuidRegExp = '/^([^ ]+)/';
+
+        // Step 2: error array (after UUID and space)
+        $this->errorsRegExp = '/^[^ ]+ (\[[^\]]*\])/';
+
+        // Step 3: remaining fields (SessionID, DocumentIdentifier, AssociatedIdentifier, Tags, CopyOfLogline)
+        $this->restRegExp = '/^[^ ]+ \[[^\]]*\] ([^ ]*) (\[[^\]]*\]) (\[[^\]]*\]) (\[[^\]]*\]) (.*)/';
 
         $this->urlLoglineParser = new $urlLoglineParserClass();
     }
@@ -25,37 +29,78 @@ class ePuStaLoglineParser
     public function parse($line, & $logline)
     {
         $logline = new ePuStaLogline;
-        $regExp2 = '/^' . $this->regExp . '/';
 
-        if (preg_match($regExp2, $line, $treffer)) {
-            $logline->uuid = trim($treffer[1]);
-            $logline->errors = json_decode(trim($treffer[2]), true) ?? [];
-            $logline->sessionId = trim($treffer[3]);
-            $logline->documentIdentifier = json_decode(trim($treffer[4]), true);
-            $logline->associatedIdentifier = json_decode(trim($treffer[5]), true);
-            $logline->tags = json_decode(trim($treffer[6]), true);
-            $logline->rawLogline = trim($treffer[7]);
-
-            $urlLogline = new URLLogline();
-            $urlErrors = [];
-            $this->urlLoglineParser->parse($logline->rawLogline, $urlLogline, $urlErrors);
-            $logline->urlLogline = $urlLogline;
-
-            if (!empty($urlErrors)) {
-                $logline->errors = array_merge($logline->errors, $urlErrors);
-            }
-
-            return true;
-        } else {
+        // Step 1: parse UUID
+        if (!preg_match($this->uuidRegExp, $line, $uuidMatch)) {
+            $logline->uuid = '00000000-0000-0000-0000-000000000000';
+            $logline->errors = ['E03'];
             $logline->rawLogline = $line;
+            if ($this->debug) {
+                fwrite(STDERR, "Error: can't parse UUID from ePuStaLogline:\n");
+                fwrite(STDERR, "    " . $line . "\n");
+            }
+            return false;
+        }
+
+        $logline->uuid = $uuidMatch[1];
+
+        // Step 2: parse error array
+        if (!preg_match($this->errorsRegExp, $line, $errorsMatch)) {
+            $logline->errors = ['E04'];
+            $logline->rawLogline = $line;
+            if ($this->debug) {
+                fwrite(STDERR, "Error: can't parse error array from ePuStaLogline:\n");
+                fwrite(STDERR, "    " . $line . "\n");
+            }
+            return false;
+        }
+
+        $errorsDecoded = json_decode($errorsMatch[1], true);
+        if ($errorsDecoded === null) {
+            $logline->errors = ['E04'];
+            $logline->rawLogline = $line;
+            if ($this->debug) {
+                fwrite(STDERR, "Error: can't decode error array from ePuStaLogline:\n");
+                fwrite(STDERR, "    " . $line . "\n");
+            }
+            return false;
+        }
+
+        $logline->errors = $errorsDecoded;
+
+        // Skip step 3 if errors are already present in the error array
+        if (!empty($logline->errors)) {
+            $logline->rawLogline = $line;
+            return true;
+        }
+
+        // Step 3: parse remaining fields
+        if (!preg_match($this->restRegExp, $line, $restMatch)) {
             $logline->errors = ['E02'];
+            $logline->rawLogline = $line;
             if ($this->debug) {
                 fwrite(STDERR, "Error: can't parse ePuStaLogline:\n");
                 fwrite(STDERR, "    " . $line . "\n");
-                fwrite(STDERR, "    " . $regExp2 . "\n");
+                fwrite(STDERR, "    " . $this->restRegExp . "\n");
             }
-
             return false;
         }
+
+        $logline->sessionId = trim($restMatch[1]);
+        $logline->documentIdentifier = json_decode(trim($restMatch[2]), true);
+        $logline->associatedIdentifier = json_decode(trim($restMatch[3]), true);
+        $logline->tags = json_decode(trim($restMatch[4]), true);
+        $logline->rawLogline = trim($restMatch[5]);
+
+        $urlLogline = new URLLogline();
+        $urlErrors = [];
+        $this->urlLoglineParser->parse($logline->rawLogline, $urlLogline, $urlErrors);
+        $logline->urlLogline = $urlLogline;
+
+        if (!empty($urlErrors)) {
+            $logline->errors = array_merge($logline->errors, $urlErrors);
+        }
+
+        return true;
     }
 }
