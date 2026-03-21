@@ -2,37 +2,42 @@
 
 namespace epusta;
 
-class ApacheLoglineParser
+class ApacheLoglineParser extends URLLoglineParser
 {
-
-    public $regExp;
+    private $regExp;
 
     public function __construct()
     {
-        $regExp = '(unknown|-|\d+\.\d+\.\d+\.\d+(, unknown)?|([A-Fa-f0-9]{1,4}:){7}[A-Fa-f0-9]{1,4}) ';      // IP Adress
-        $regExp .= '(.*) ';                            // Remote logname
-        $regExp .= '.* ';                              // Remote user
-        $regExp .= '\[(.*)\] ';                        // Time the request was received
-        $regExp .= '"(.*) (.*) (HTTP\/[1,2]\.[0,1])" ';  // http Method, request URL,
-        $regExp .= '(\d\d\d) ';                        // http Status Code
-        $regExp .= '[0-9-]+ ';                         // Size of response in bytes
-        $regExp .= '"(.*)" ';                          // Referer
-        $regExp .= '"(.*)"';                           // User Agent
+        $this->regExp = '(.*) ';                                    // IP Address
+        $this->regExp .= '(.*) ';                                   // Remote logname
+        $this->regExp .= '.* ';                                     // Remote user
+        $this->regExp .= '\[(.*)\] ';                               // Time
+        $this->regExp .= '"([^ ]*) ([^ ]*) HTTP\/[1,2]\.[0,1]" ';  // Method, URL
+        $this->regExp .= '(\d\d\d) ';                               // HTTP Status Code
+        $this->regExp .= '([0-9-]+) ';                              // Response size
+        $this->regExp .= '"(.*)" ';                                 // Referer
+        $this->regExp .= '"(.*)"';                                  // User Agent
     }
 
-    public function parse($line, & $logline)
+    public function parse(string $rawLogline, URLLogline &$logline): bool
     {
+        $logline = new ApacheLogline();
         $regExp2 = '/^' . $this->regExp . '/';
-        if (! $logline) {
-            $logline = new ApacheLogline();
-            echo "Error keine  ApacheLogline\n";
-        }
-        if (preg_match($regExp2, $line, $treffer)) {
+
+        if (preg_match($regExp2, $rawLogline, $treffer)) {
             $logline->ip = trim($treffer[1]);
+            $logline->remoteLogname = trim($treffer[2]);
+            $logline->time = trim($treffer[3]);
+            $logline->httpMethod = trim($treffer[4]);
+            $logline->url = trim($treffer[5]);
+            $logline->httpStatusCode = trim($treffer[6]);
+            $logline->sizeOfResponse = trim($treffer[7]);
+            $logline->referer = trim($treffer[8]);
+            $logline->userAgent = trim($treffer[9]);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

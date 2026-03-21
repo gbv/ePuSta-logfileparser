@@ -5,9 +5,9 @@ namespace epusta;
 class ePuStaLoglineParser
 {
     public $regExp;
-    private $apacheRegExp;
+    private $urlLoglineParser;
 
-    public function __construct()
+    public function __construct(string $urlLoglineParserClass = ApacheLoglineParser::class)
     {
         $this->regExp = '([^ ]*) ';           // UUID
         $this->regExp .= '([^ ]*) ';          // SessionID
@@ -17,15 +17,7 @@ class ePuStaLoglineParser
         $this->regExp .= '(\[[^\]]*\]) ';     // Errors
         $this->regExp .= '(.*)';              // CopyOfLogline
 
-        $this->apacheRegExp = '(.*) ';                                    // IP Address
-        $this->apacheRegExp .= '(.*) ';                                   // Remote logname
-        $this->apacheRegExp .= '.* ';                                     // Remote user
-        $this->apacheRegExp .= '\[(.*)\] ';                               // Time
-        $this->apacheRegExp .= '"([^ ]*) ([^ ]*) HTTP\/[1,2]\.[0,1]" ';  // Method, URL
-        $this->apacheRegExp .= '(\d\d\d) ';                               // HTTP Status Code
-        $this->apacheRegExp .= '([0-9-]+) ';                              // Response size
-        $this->apacheRegExp .= '"(.*)" ';                                 // Referer
-        $this->apacheRegExp .= '"(.*)"';                                  // User Agent
+        $this->urlLoglineParser = new $urlLoglineParserClass();
     }
 
     public function parse($line, & $logline)
@@ -42,7 +34,9 @@ class ePuStaLoglineParser
             $logline->errors = json_decode(trim($treffer[6]), true);
             $logline->rawLogline = trim($treffer[7]);
 
-            $logline->urlLogline = $this->parseApacheLogline($logline->rawLogline);
+            $urlLogline = new URLLogline();
+            $this->urlLoglineParser->parse($logline->rawLogline, $urlLogline);
+            $logline->urlLogline = $urlLogline;
 
             return true;
         } else {
@@ -52,25 +46,5 @@ class ePuStaLoglineParser
 
             return false;
         }
-    }
-
-    private function parseApacheLogline($rawLogline)
-    {
-        $apacheLogline = new ApacheLogline();
-        $regExp2 = '/^' . $this->apacheRegExp . '/';
-
-        if (preg_match($regExp2, $rawLogline, $treffer)) {
-            $apacheLogline->ip = trim($treffer[1]);
-            $apacheLogline->remoteLogname = trim($treffer[2]);
-            $apacheLogline->time = trim($treffer[3]);
-            $apacheLogline->httpMethod = trim($treffer[4]);
-            $apacheLogline->url = trim($treffer[5]);
-            $apacheLogline->httpStatusCode = trim($treffer[6]);
-            $apacheLogline->sizeOfResponse = trim($treffer[7]);
-            $apacheLogline->referer = trim($treffer[8]);
-            $apacheLogline->userAgent = trim($treffer[9]);
-        }
-
-        return $apacheLogline;
     }
 }

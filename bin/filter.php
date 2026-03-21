@@ -3,7 +3,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$epuStaLoglineParser = new epusta\ePuStaLoglineParser();
+$configuration = new \epusta\Configuration();
+$config = $configuration->getConfig();
+$urlLoglineParserClass = $config['URLLoglineParserClass'] ?? \epusta\ApacheLoglineParser::class;
+$epuStaLoglineParser = new epusta\ePuStaLoglineParser($urlLoglineParserClass);
 $filterRobots = new epusta\FilterRobots ();
 $counter3Filter30sek = new epusta\Counter3Filter30sek ();
 $filterHttpStatus = new \epusta\FilterHttpStatus();
