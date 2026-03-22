@@ -50,7 +50,8 @@ class MIRToolbox
             $object = $this->mycoreObjectFactory->create($match[1]);
 
             if ($object) {
-                $epuStaLogline->documentIdentifier = $object->getAllIdentifier();
+                $epuStaLogline->documentIdentifier = $object->getObjectIdentifier();
+                $epuStaLogline->associatedIdentifier = $object->getParentIdentifier();
                 $epuStaLogline->tags[] = "oas:content:counter_abstract";
                 $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
                 return true;
@@ -67,7 +68,8 @@ class MIRToolbox
             $object = $this->mycoreObjectFactory->create($match[1]);
 
 	    if ($object) {
-                $epuStaLogline->documentIdentifier = $object->getAllIdentifier();
+                $epuStaLogline->documentIdentifier = $object->getObjectIdentifier();
+                $epuStaLogline->associatedIdentifier = $object->getParentIdentifier();
                 $epuStaLogline->tags[] = "oas:content:counter_abstract";
                 $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
                 return true;
@@ -122,7 +124,8 @@ class MIRToolbox
                     $epuStaLogline->errors[] = 'E05';
                     return false;
                 }
-                $epuStaLogline->documentIdentifier = array_merge($object->getAllIdentifier(), $epuStaLogline->documentIdentifier);
+                $epuStaLogline->documentIdentifier = array_merge($object->getObjectIdentifier(), $epuStaLogline->documentIdentifier);
+                $epuStaLogline->associatedIdentifier = $object->getParentIdentifier();
                 $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
                 //Add URN
                 $urn = $derivate->urn;
@@ -157,7 +160,8 @@ class MIRToolbox
                 $epuStaLogline->errors[] = 'E05';
                 return false;
             }
-            $epuStaLogline->documentIdentifier = array_merge($object->getAllIdentifier(), $epuStaLogline->documentIdentifier);
+            $epuStaLogline->documentIdentifier = array_merge($object->getObjectIdentifier(), $epuStaLogline->documentIdentifier);
+            $epuStaLogline->associatedIdentifier = $object->getParentIdentifier();
             $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
             //Add URN
             $urn = $derivate->urn;
@@ -185,7 +189,8 @@ class MIRToolbox
                 $epuStaLogline->errors[] = 'E05';
                 return false;
             }
-            $epuStaLogline->documentIdentifier = array_merge($object->getAllIdentifier(), $epuStaLogline->documentIdentifier);
+            $epuStaLogline->documentIdentifier = array_merge($object->getObjectIdentifier(), $epuStaLogline->documentIdentifier);
+            $epuStaLogline->associatedIdentifier = $object->getParentIdentifier();
             $epuStaLogline->tags = array_merge($object->getSubjects(), $epuStaLogline->tags);
             //Add URN
             $urn = $derivate->urn;
