@@ -16,4 +16,7 @@ logs
 build
 
 # ignore config
-config/config.ini 
+config/config.ini
+
+# ignore phpunit cache
+.phpunit.cache
