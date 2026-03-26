@@ -45,9 +45,14 @@ class MIRToolboxTest extends \PHPUnit\Framework\TestCase
         $testline = '03147e0f-ac4e-4163-a93d-d1730eaf8c1a [] - [] [] [] 193.174.111.250 - - [08/Apr/2019:13:13:09 +0200] "GET /rsc/stat/test_mods_00000001.css HTTP/1.1" 200 61 "" ""';
         $this->epuStaLoglineParser->parse($testline, $logline);
         $this->mirToolbox->addIdentifier($logline);
-        $this->assertContains("test_mods_00000002", $logline->associatedIdentifier, "MyCoReID not parsed from xml file - test_mods_00000002 is missed in array of identifier: \n".print_r($logline->documentIdentifier,true));
-        $this->assertContains("urn:nbn:de:test:2-5", $logline->associatedIdentifier, "URN not parsed from xml file - urn:nbn:de:test:2-5 is missed in array of identifier: \n".print_r($logline->documentIdentifier,true));
-        $this->assertContains("22222/22222-0", $logline->associatedIdentifier, "DOI not parsed from xml file - 22222/22222-0 is missed in array of identifier: \n".print_r($logline->documentIdentifier,true));
+        echo($logline . "\n");
+        $this->assertContains("test_mods_00000002", $logline->associatedIdentifier, "MyCoReID not parsed from xml file - test_mods_00000002 is missed in array of identifier: \n".print_r($logline->associatedIdentifier,true));
+        $this->assertContains("urn:nbn:de:test:2-5", $logline->associatedIdentifier, "URN not parsed from xml file - urn:nbn:de:test:2-5 is missed in array of identifier: \n".print_r($logline->associatedIdentifier,true));
+        $this->assertContains("22222/22222-0", $logline->associatedIdentifier, "DOI not parsed from xml file - 22222/22222-0 is missed in array of identifier: \n".print_r($logline->associatedIdentifier,true));
+
+        $this->assertContains("test_mods_00000003", $logline->associatedIdentifier, "MyCoReID not parsed from xml file - test_mods_00000003 is missed in array of identifier: \n".print_r($logline->associatedIdentifier,true));
+        $this->assertContains("urn:nbn:de:test:3-9", $logline->associatedIdentifier, "URN not parsed from xml file - urn:nbn:de:test:3-9 is missed in array of identifier: \n".print_r($logline->associatedIdentifier,true));
+        $this->assertContains("33333/33333-0", $logline->associatedIdentifier, "DOI not parsed from xml file - 33333/33333-0 is missed in array of identifier: \n".print_r($logline->associatedIdentifier,true));
         
     }
 }
