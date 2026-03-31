@@ -27,7 +27,9 @@ while (!feof(STDIN)) {
     if ($line = trim(fgets(STDIN))) {
         $logline = new epusta\ePuStaLogline();
         if ($epuStaLoglineParser->parse($line, $logline)) {
-            $mirToolbox->addIdentifier($logline);
+            if (!$logline->hasErrors()) {
+                $mirToolbox->addIdentifier($logline);
+            }
             echo($logline . "\n");
         } else {
             // die("Error: malformed Logline" . $line . "\n")

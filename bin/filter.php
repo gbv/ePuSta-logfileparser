@@ -30,10 +30,12 @@ while (!feof(STDIN)) {
     if ($line = trim(fgets(STDIN))) {
         $logline = new epusta\ePuStaLogline();
         if ($epuStaLoglineParser->parse($line, $logline)) {
-            $filterRobots->edit($logline);
-            $counter3Filter30sek->edit($logline);
-            $filterHttpStatus->edit($logline);
-            $filterHttpMethod->edit($logline);
+            if (!$logline->hasErrors()) {
+                $filterRobots->edit($logline);
+                $counter3Filter30sek->edit($logline);
+                $filterHttpStatus->edit($logline);
+                $filterHttpMethod->edit($logline);
+            }
             echo($logline . "\n");
         } else {
             // die("Error: malformed Logline" . $line . "\n")

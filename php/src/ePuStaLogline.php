@@ -26,6 +26,11 @@ class ePuStaLogline
         return $str;
     }
 
+    public function hasErrors(): bool
+    {
+        return !empty($this->errors);
+    }
+
     public function convertLogline($line)
     {
         $out = $this->uuid . " ";
