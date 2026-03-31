@@ -7,10 +7,12 @@ class DerivateFactory extends AbstractFactory
 
     private $config = null;
     private $cache = [];
+    private $debug = false;
 
-    public function __construct($config)
+    public function __construct($config, bool $debug = false)
     {
         $this->config = $config;
+        $this->debug = $debug;
     }
 
     public function create($derivateid)
@@ -50,7 +52,7 @@ class DerivateFactory extends AbstractFactory
 
         $elements = $xpath->query("/mycorederivate/derivate/linkmetas[@class='MCRMetaLinkID']/linkmeta");
         if ($elements->length > 1) {
-            fwrite(STDERR, "Warning - (" . $derivateid . ") more then one parent.\n");
+            if ($this->debug) fwrite(STDERR, "Warning - (" . $derivateid . ") more then one parent.\n");
         }
         $element = $elements->item(0);
         $objectid = $element->getAttribute("xlink:href");

@@ -21,7 +21,7 @@ $configuration = new \epusta\Configuration();
 $config = $configuration->getConfig();
 $urlLoglineParserClass = $config['URLLoglineParserClass'] ?? \epusta\ApacheLoglineParser::class;
 $epuStaLoglineParser = new epusta\ePuStaLoglineParser($urlLoglineParserClass, $debug);
-$mirToolbox = new epusta\mir\MIRToolbox($config);
+$mirToolbox = new epusta\mir\MIRToolbox($config, false, $debug);
 
 while (!feof(STDIN)) {
     if ($line = trim(fgets(STDIN))) {

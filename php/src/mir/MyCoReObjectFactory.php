@@ -7,10 +7,12 @@ class MyCoReObjectFactory extends AbstractFactory
 
     private $config = null;
     private $cache = [];
+    private $debug = false;
 
-    public function __construct($config)
+    public function __construct($config, bool $debug = false)
     {
         $this->config = $config;
+        $this->debug = $debug;
     }
 
     public function create($mcrobjectid)
@@ -37,14 +39,14 @@ class MyCoReObjectFactory extends AbstractFactory
                 fwrite(STDERR, "MyCoReObjectFactory - Configured directory don't exists. ".$this->config['datadir']."\n");
             }
 	    $path = $this->config['datadir'] . '/' . $this->getOcflFilePathById("mcrobject:".$mcrobjectid) . '/' . $mcrobjectid . '.xml';
-	    fwrite(STDERR, "MyCoReObjectFactory - Path :" .$path."\n");
+	    if ($this->debug) fwrite(STDERR, "MyCoReObjectFactory - Path :" .$path."\n");
 	} else {
             $path = $this->config['url_prefix'] . "/api/v1/objects/" . $mcrobjectid;
         }
 
         $doc = $this->getDOMByURL($path);
         if ($doc == null) {
-		fwrite(STDERR, "MyCoReObjectFactory - File nicht gefunden\n");
+		if ($this->debug) fwrite(STDERR, "MyCoReObjectFactory - File nicht gefunden\n");
 		return null;
         }
         $nodename = $doc->documentElement->nodeName;

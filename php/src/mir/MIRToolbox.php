@@ -21,14 +21,14 @@ class MIRToolbox
      * @param $config config to be used
      * @param $logger optional: set custom logger
      */
-    public function __construct($config, $logger = false)
+    public function __construct($config, $logger = false, bool $debug = false)
     {
         $this->config = $config;
         $this->logger = $logger;
         $this->cache = [];
         $this->lastDerivate = "";
-        $this->mycoreDerivateFactory = new mir\DerivateFactory($config);
-        $this->mycoreObjectFactory = new mir\MyCoReObjectFactory($config);
+        $this->mycoreDerivateFactory = new mir\DerivateFactory($config, $debug);
+        $this->mycoreObjectFactory = new mir\MyCoReObjectFactory($config, $debug);
     }
 
     public function addIdentifier(& $epuStaLogline)
