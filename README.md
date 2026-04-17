@@ -1,7 +1,5 @@
-# ePuSta
-Access Statistics about the usage of electronic Publications
-
-This is a framework to provide Usage Statistics for repositories.
+# ePuSta-logfileparser
+This is a framework to enrich logfile of a repository with informations. Thes are used by [ePuSta-Server](https://github.com/gbv/ePuSta-Server) to provide Usage Statistics for the repository.
 
 ## Requirements:
 - php 7.4
