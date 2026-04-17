@@ -38,7 +38,7 @@ class MyCoReObjectFactory extends AbstractFactory
                 // Temp - print a notice for user. Replace after intruducing a correct error handling.
                 fwrite(STDERR, "MyCoReObjectFactory - Configured directory don't exists. ".$this->config['datadir']."\n");
             }
-	    $path = $this->config['datadir'] . '/' . $this->getOcflFilePathById("mcrobject:".$mcrobjectid) . '/' . $mcrobjectid . '.xml';
+            $path = $this->config['datadir'] . '/' . $this->getOcflFilePathById("mcrobject:" . $mcrobjectid, $this->config['datadir']) . '/' . $mcrobjectid . '.xml';
 	    if ($this->debug) fwrite(STDERR, "MyCoReObjectFactory - Path :" .$path."\n");
 	} else {
             $path = $this->config['url_prefix'] . "/api/v1/objects/" . $mcrobjectid;

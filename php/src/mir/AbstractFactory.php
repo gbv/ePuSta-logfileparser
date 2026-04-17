@@ -67,7 +67,7 @@ abstract class AbstractFactory
         return $path;
     }
 
-    protected function getOcflFilePathById($id)
+    protected function getOcflFilePathById($id, $datadir)
     {
         // config from extensions/0003-hash-and-id-n-tuple-storage-layout/config.json
         $digestAlgorithm = "sha256";
@@ -75,8 +75,8 @@ abstract class AbstractFactory
         $numberOfTuples = 3;
         $extensionName = "0003-hash-and-id-n-tuple-storage-layout";
 
-        $path = "ocfl-root-neu/" . $this->ocfl_path($id, $digestAlgorithm, $tupleSize, $numberOfTuples);
-        $dirs = scandir('/mcr/dfi/docker-data/mir-data/' . $path);
+        $path = $this->ocfl_path($id, $digestAlgorithm, $tupleSize, $numberOfTuples);
+        $dirs = scandir($datadir . '/' . $path);
         $vdir = '';
         foreach ($dirs as $dir) {
             if (substr($dir, 0, 1) == 'v') $vdir = $dir;
