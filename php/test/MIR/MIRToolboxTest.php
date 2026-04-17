@@ -51,6 +51,19 @@ class MIRToolboxTest extends \PHPUnit\Framework\TestCase
 
     }
 
+    public function testGetIdentifierFromOcflDirectory()
+    {
+        $ocflConfig = [
+            'getmethod' => 'file-ocfl',
+            'datadir' => './php/test/ressources/mir-ocfl-root',
+        ];
+        $ocflMirToolbox = new MIRToolbox($ocflConfig);
+        $testline = '03147e0f-ac4e-4163-a93d-d1730eaf8c1a [] - [] [] [] 193.174.111.250 - - [08/Apr/2019:13:13:09 +0200] "GET /rsc/stat/dfi_mods_00182795.css HTTP/1.1" 200 61 "" ""';
+        $this->epuStaLoglineParser->parse($testline, $logline);
+        $ocflMirToolbox->addIdentifier($logline);
+        $this->assertContains("dfi_mods_00182795", $logline->documentIdentifier, "MyCoReID not parsed from ocfl directory - dfi_mods_00182795 is missed in array of identifier: \n".print_r($logline->documentIdentifier, true));
+    }
+
     public function testGetAssociatedIdentifierFromCSSHack()
     {
         $testline = '03147e0f-ac4e-4163-a93d-d1730eaf8c1a [] - [] [] [] 193.174.111.250 - - [08/Apr/2019:13:13:09 +0200] "GET /rsc/stat/test_mods_00000001.css HTTP/1.1" 200 61 "" ""';
