@@ -1,5 +1,22 @@
 # ePuSta-logfileparser
+
 This is a framework to enrich logfile of a repository with informations. Thes are used by [ePuSta-Server](https://github.com/gbv/ePuSta-Server) to provide Usage Statistics for the repository.
+Access Statistics about the usage of electronic Publications.
+
+This is the core PHP library / CLI of the ePuSta framework. It provides
+**single-file** building blocks: each CLI in `bin/` reads one stream
+(STDIN or `<file>`) and writes one result (STDOUT). Iterating over whole
+directories of logs, cron integration and similar batch concerns are
+**not** part of this project — those live in
+[ePuSta_tools](https://github.com/gbv/ePuSta_tools/).
+
+## Related projects
+
+| Project | Role |
+|---|---|
+| `ePuSta-logfileparser` (this) | Single-file processing of access / epusta logs: parse, filter, anonymize, enrich. |
+| [`ePuSta_tools`](https://github.com/gbv/ePuSta_tools/) | Mass / batch processing across directories; orchestrates this parser in MIR / reposis setups. |
+| [`ePuSta-Server`](https://github.com/gbv/ePuSta-Server/) | Solr index and HTTP APIs for the enriched logs. |
 
 ## Requirements:
 - php 7.4

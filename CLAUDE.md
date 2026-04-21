@@ -2,7 +2,24 @@
 
 ## Project Overview
 
-This PHP project parses web server access log files and enriches each line with document metadata. The resulting files are called **epustalogfiles**.
+This PHP project parses web server access log files and enriches each line
+with document metadata. The resulting files are called **epustalogfiles**.
+
+## Role in the ePuSta ecosystem
+
+Scope of this project: **single-file processing**. Every `bin/` CLI reads
+one stream (STDIN / `<file>`) and writes one result (STDOUT). There are no
+directory walkers, no cron entry points and no gzip-batch helpers here —
+those belong to `ePuSta_tools`.
+
+| Concern | Home project |
+|---|---|
+| Parse / filter / enrich / anonymize **one** log file | this project |
+| Operate on **one** Solr import JSON / one source | `ePuSta-Server` |
+| Iterate over directories, batch, cron, gzip handling | `ePuSta_tools` |
+
+If a feature request implies walking a directory or managing many files,
+it almost certainly belongs in `ePuSta_tools`, not here.
 
 ## Key Concepts
 
