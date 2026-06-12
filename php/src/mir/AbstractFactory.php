@@ -15,12 +15,12 @@ abstract class AbstractFactory
             $type = $match[2];
             $dig4 = $match[3];
             $dig2 = $match[4];
-            return "metadata/" . $project . "/" . $type . "/" . $dig4 . "/" . $dig2;
+            return $project . "/" . $type . "/" . $dig4 . "/" . $dig2;
         } else if (preg_match('/([^\/]+)_([^\/]+)_([0-9]{1,2})[0-9]{2}$/', $id, $match)) {
             $project = $match[1];
             $type = $match[2];
             $dig2 = $match[3];
-            return "metadata/" . $project . "/" . $type . "/" . $dig2;
+            return $project . "/" . $type . "/" . $dig2;
         } else {
             return null;
         }
